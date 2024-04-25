@@ -3,6 +3,7 @@ package com.example.listapizz
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
@@ -51,7 +53,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun ListaPizz(){
     val myList = remember { mutableListOf<Pizza>() }
-    var nameState by remember { mutableStateOf("")  }
+    var pizzaName by remember { mutableStateOf("")  }
 
     var priceText by remember {mutableStateOf("") }
     var pizzaSize by remember { mutableStateOf("") }
@@ -62,18 +64,22 @@ fun ListaPizz(){
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        TextField(value=nameState, onValueChange = {
-            nameState = it
-        },
-            label={ Text(text="Podaj nazwe pizzy.")},
-            singleLine = true
-            )
+        TextField(
+            value=pizzaName,
+            onValueChange = {
+                pizzaName=it
+            },
+            label={ Text(text="Podaj nazwę pizzy.")},
+            singleLine = true,
+        )
 
         Spacer(modifier = Modifier.height(5.dp))
 
-        TextField(value=priceText, onValueChange = {
-            priceText=it
-        },
+        TextField(
+            value=priceText,
+            onValueChange = {
+                priceText=it
+            },
             label={ Text(text="Podaj cenę pizzy.")},
             singleLine = true,
             keyboardOptions = KeyboardOptions.Default.copy(
@@ -104,21 +110,23 @@ fun ListaPizz(){
         Spacer(modifier = Modifier.height(20.dp))
         
         Button(onClick = { }) {
-            if(nameState.isNotEmpty()){
+            if(pizzaName.isNotEmpty()){
                 myList.add(
                     Pizza(
-                        name=nameState,
+                        name=pizzaName,
                         price=priceText.toDouble(),
                         size = pizzaSize
                     )
                 )
-                nameState=""
+                pizzaName=""
                 priceText=""
                 pizzaSize=""
             }
             
             Text(text = "Dodaj")
         }
+
+
         if(myList.isEmpty()){
             Text(
                 text="Pusta list",
@@ -126,13 +134,16 @@ fun ListaPizz(){
                 modifier=Modifier.padding(16.dp)
             )
         } else {
-            LazyColumn {
-                items(myList) { item ->
+            LazyColumn(
+                modifier=Modifier.padding(top=8.dp)){
+
+                items(myList){ item ->
                     Text(
-                        text = "${item.name}, ${item.price}PLN, ${item.size}"),
+                        text = "${item.name}, ${item.price}PLN, ${item.size}",
                         style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.padding(vertical =4.dp),
-                       .clickable{myList.remove(item)}
+                        modifier = Modifier
+                                    .padding(vertical =4.dp)
+                                    .clickable { myList.remove(item) }
 
                     )
                 }
