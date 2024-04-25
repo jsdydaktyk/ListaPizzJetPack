@@ -3,16 +3,19 @@ package com.example.listapizz
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
@@ -29,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -53,6 +57,11 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun ListaPizz(){
+
+    fun getItemColor(index: Int): Color {
+        return if (index % 2 == 0) Color.LightGray else Color.White
+    }
+
     val myList = remember { mutableStateListOf<Pizza>() }
     var pizzaName by remember { mutableStateOf("")  }
 
@@ -139,13 +148,25 @@ fun ListaPizz(){
             )
         } else {
             LazyColumn(modifier=Modifier.padding(top=8.dp)){
-                items(myList){ item ->
+//                items(myList){ item ->
+//                    Text(
+//                        text = "${item.name}, ${item.price}PLN, ${item.size}",
+//                        style = MaterialTheme.typography.titleMedium,
+//                        modifier = Modifier
+//                                    .padding(vertical =4.dp)
+//                                    .clickable { myList.remove(item) }
+//
+//                    )
+//                }
+                itemsIndexed(myList){ index, item ->
                     Text(
                         text = "${item.name}, ${item.price}PLN, ${item.size}",
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier
-                                    .padding(vertical =4.dp)
-                                    .clickable { myList.remove(item) }
+                            .fillMaxWidth()
+                            .padding(vertical =4.dp)
+                            .background(getItemColor(index))
+                            .clickable { myList.remove(item) }
 
                     )
                 }
