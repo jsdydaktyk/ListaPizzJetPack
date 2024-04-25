@@ -109,7 +109,7 @@ fun ListaPizz(){
         
         Spacer(modifier = Modifier.height(20.dp))
         
-        Button(onClick = { }) {
+        Button(onClick = {
             if(pizzaName.isNotEmpty()){
                 myList.add(
                     Pizza(
@@ -122,7 +122,10 @@ fun ListaPizz(){
                 priceText=""
                 pizzaSize=""
             }
-            
+        },
+            modifier=Modifier.padding(top=8.dp)
+        ) {
+
             Text(text = "Dodaj")
         }
 
@@ -134,9 +137,7 @@ fun ListaPizz(){
                 modifier=Modifier.padding(16.dp)
             )
         } else {
-            LazyColumn(
-                modifier=Modifier.padding(top=8.dp)){
-
+            LazyColumn(modifier=Modifier.padding(top=8.dp)){
                 items(myList){ item ->
                     Text(
                         text = "${item.name}, ${item.price}PLN, ${item.size}",
