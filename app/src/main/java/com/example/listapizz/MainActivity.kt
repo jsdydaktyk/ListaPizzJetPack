@@ -10,7 +10,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -58,14 +62,18 @@ fun ListaPizz(){
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        TextField(value="pizza", onValueChange = {},
+        TextField(value=nameState, onValueChange = {
+            nameState = it
+        },
             label={ Text(text="Podaj nazwe pizzy.")},
             singleLine = true
             )
 
         Spacer(modifier = Modifier.height(5.dp))
 
-        TextField(value="cena", onValueChange = {},
+        TextField(value=priceText, onValueChange = {
+            priceText=it
+        },
             label={ Text(text="Podaj cenę pizzy.")},
             singleLine = true,
             keyboardOptions = KeyboardOptions.Default.copy(
@@ -76,7 +84,59 @@ fun ListaPizz(){
         Spacer(modifier = Modifier.height(10.dp))
 
         Box{
+            Button(onClick = {isExpended=true }) {
+                Text(text = "Wielkosć Pizzy")
+            }
+            DropdownMenu(expanded = isExpended, 
+                onDismissRequest = { isExpended=false }) {
+                DropdownMenuItem(text = { Text("mała") }, onClick = {
+                       pizzaSize= "mała"
+                       isExpended=false
+                })
+                DropdownMenuItem(text = { Text("duża") }, onClick = {
+                    pizzaSize= "duża"
+                    isExpended=false
+                 })
 
+            }
+        }
+        
+        Spacer(modifier = Modifier.height(20.dp))
+        
+        Button(onClick = { }) {
+            if(nameState.isNotEmpty()){
+                myList.add(
+                    Pizza(
+                        name=nameState,
+                        price=priceText.toDouble(),
+                        size = pizzaSize
+                    )
+                )
+                nameState=""
+                priceText=""
+                pizzaSize=""
+            }
+            
+            Text(text = "Dodaj")
+        }
+        if(myList.isEmpty()){
+            Text(
+                text="Pusta list",
+                style=MaterialTheme.typography.titleMedium,
+                modifier=Modifier.padding(16.dp)
+            )
+        } else {
+            LazyColumn {
+                items(myList) { item ->
+                    Text(
+                        text = "${item.name}, ${item.price}PLN, ${item.size}"),
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(vertical =4.dp),
+                       .clickable{myList.remove(item)}
+
+                    )
+                }
+            }
         }
     }
 }
